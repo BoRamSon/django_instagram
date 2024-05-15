@@ -19,9 +19,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from content.views import Index  # 추가
+from content.views import Index, UploadFeed  # 추가
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("index/", Index.as_view()),  # 수정
+    path("index/", Index.as_view()),
+    path("content/upload", UploadFeed.as_view()),  # 추가
 ]
