@@ -1,5 +1,3 @@
-# config/urls.py
-
 """
 URL configuration for config project.
 
@@ -19,10 +17,15 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from content.views import Index, UploadFeed  # 추가
+from content.views import Index, UploadFeed
+from django.conf import settings  # 추가
+from django.conf.urls.static import static  # 추가
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("index/", Index.as_view()),
-    path("content/upload", UploadFeed.as_view()),  # 추가
+    path("content/upload", UploadFeed.as_view()),
 ]
+
+# 추가
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
