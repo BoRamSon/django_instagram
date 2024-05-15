@@ -25,7 +25,6 @@
         <!-- Jquery -->
         <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 
-
         <!-- Style -->
         <style>
             .box {
@@ -50,6 +49,7 @@
                 position: absolute;
                 left: 0;
                 top: 0;
+                /* 아래의 코드에 있는 flex 를 display: none; 으로 수정해보세요 */
                 display: none;
                 flex-direction: column;
                 align-items: center;
@@ -72,6 +72,10 @@
             }
         </style>
     </head>
+
+
+
+
     <body>
         <!-- 네비게이션 바 : 상단 고정, 전체 너비 -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed; width: 100%; z-index: 999">
@@ -284,18 +288,146 @@
         </div>
 
         <!-- 모달 창 -->
-        <div class="modal_overlay">
-            <div class="modal_window"></div>
+        <div id="first_modal" class="modal_overlay">
+            <div class="modal_window">
+                <div style="display: flex; flex-direction: row; justify-content: space-between">
+                    <div style="width: 40px"></div>
+                    <div>새 이미지 업로드</div>
+                    <div style="width: 40px">
+                        <span class="material-symbols-outlined"> close </span>
+                    </div>
+                </div>
+
+                <div
+                    class="img_upload_space"
+                    style="border-top: solid 1px gray; width: 778px; height: 540px; margin-top: 10px"
+                ></div>
+            </div>
         </div>
 
-        <!-- When add_box clicked -->
+        <!-- second_modal -->
+        <div id="second_modal" class="modal_overlay">
+            <div class="modal_window">
+                <div style="display: flex; flex-direction: row; justify-content: space-between">
+                    <div style="width: 40px;"></div>
+                    <div>새 게시물</div>
+                    <div style="width: 40px;">
+                        <span class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
 
+                <div style="border-top: solid 1px gray; display: flex; flex-direction: row; margin-top: 10px">
+                    <div class="img_upload_space" style="width: 500px; height: 540px"></div>
+                    <div style="border-left: solid 1px gray">
+                        <div>
+                            <textarea id="input_feed_content" class="form-control" style="width: 276px; height: 400px" rows="5"></textarea>
+                        </div>
+                        <button id="feed_create_button" type="button" class="btn btn-primary" style="width: 100%">공유하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- When add_box clicked -->
         <script>
             $('#nav_bar_add_box').click(function () {
-                $('.modal_overlay').css({
+                $('#first_modal').css({
                     display: 'flex',
                 });
+
+                $(document.body).css({
+                    overflow: 'hidden',
+                });
             });
+
+            // 공유하기 버튼 클릭
+            $('#feed_create_button').click(function () {
+                alert('공유하기 버튼을 눌렀습니다!');
+
+                let file = files;
+                let image = files[0].name;
+                let content = $('#input_feed_content').val();
+                let user_id = '아기 근육 다람쥐';
+                let profile_image =
+                    'http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png';
+
+                // FormData 객체를 생성
+                let fd = new FormData();
+
+                // FormData 객체에 앞서 저장한 변수들을 추가
+                fd.append('file', file);
+                fd.append('image', image);
+                fd.append('content', content);
+                fd.append('profile_image', profile_image);
+                fd.append('user_id', user_id);
+
+                // $.ajax 메소드를 사용하여 /content/upload URL로 POST 요청
+                $.ajax({
+                    url: '/content/upload',
+                    data: fd,
+                    method: 'POST',
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log('성공');
+                    },
+                    error: function (request, status, error) {
+                        console.log('에러');
+                    },
+                    complete: function () {
+                        console.log('완료');
+                    },
+                });
+            });
+
+            // 업로드 공간
+            $('.img_upload_space').on('dragover', dragOver).on('dragleave', dragOver).on('drop', uploadFiles);
+
+            function dragOver(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                if (e.type == 'dragover') {
+                    $(e.target).css({
+                        'background-color': 'black',
+                        'outline-offset': '-20px',
+                    });
+                } else {
+                    $(e.target).css({
+                        'outline-offset': '-10px',
+                    });
+                }
+            }
+
+            function uploadFiles(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                e.dataTransfer = e.originalEvent.dataTransfer;
+                files = e.target.files || e.dataTransfer.files;
+                console.log('뭔가 파일을 올렸네??' + files[0].name);
+                if (files.length > 1) {
+                    alert('하나만 올려주세요!');
+                    return;
+                }
+                if (files[0].type.match(/image.*/)) {
+                    $('#first_modal').css({ display: 'none' });
+                    $('#second_modal').css({ display: 'flex' });
+
+                    $('.img_upload_space').css({
+                        'background-image': 'url(' + window.URL.createObjectURL(files[0]) + ')',
+                        outline: 'none',
+                        'background-size': '100%',
+                        'background-repeat': 'no-repeat',
+                        'background-position': 'center',
+                    });
+                } else {
+                    alert('이미지가 아닙니다.');
+                    return;
+                }
+            }
         </script>
 
         <script
