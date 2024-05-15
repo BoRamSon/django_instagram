@@ -302,7 +302,7 @@
                     <div style="width: 40px"></div>
                     <div>새 이미지 업로드</div>
                     <div style="width: 40px">
-                        <span class="material-symbols-outlined"> close </span>
+                        <span id="close_icon" class="material-symbols-outlined">close</span>
                     </div>
                 </div>
 
@@ -317,7 +317,7 @@
                     <div style="width: 40px"></div>
                     <div>새 게시물</div>
                     <div style="width: 40px">
-                        <span class="material-symbols-outlined">close</span>
+                        <span id="close_icon" class="material-symbols-outlined">close</span>
                     </div>
                 </div>
 
@@ -348,6 +348,12 @@
         </script>
 
         <script>
+            // 'close_icon' id를 가진 모든 요소에 클릭 이벤트를 적용
+            $('.modal_overlay').on('click', '#close_icon', function () {
+                closeModal();
+            });
+
+            // nav_bar 에 있는 add_box를 클릭했을 때, 모달 창이 나오도록 하는 이벤트
             $('#nav_bar_add_box').click(function () {
                 $('#first_modal').css({
                     display: 'flex',
@@ -357,6 +363,16 @@
                     overflow: 'hidden',
                 });
             });
+
+            // 모달창이 꺼지도록하는 함수
+            function closeModal() {
+                $('.modal_overlay').css({
+                    display: 'none',
+                });
+                $(document.body).css({
+                    overflow: 'visible',
+                });
+            }
 
             // 공유하기 버튼 클릭
             $('#feed_create_button').click(function () {
@@ -386,7 +402,7 @@
                     method: 'POST',
                     processData: false,
                     contentType: false,
-                    headers: { 'X-CSRFTOKEN': csrftoken }, // 403 Forbidden Sol
+                    headers: { 'X-CSRFToken': csrftoken }, // 403 Forbidden Error Sol
                     success: function (data) {
                         console.log('성공');
                     },
@@ -395,6 +411,8 @@
                     },
                     complete: function () {
                         console.log('완료');
+                        closeModal();
+                        location.reload();
                     },
                 });
             });
