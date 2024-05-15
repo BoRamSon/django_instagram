@@ -1,4 +1,5 @@
 # config/urls.py
+
 """
 URL configuration for config project.
 
@@ -18,9 +19,9 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from .views import Sub
+from content.views import Index  # 추가
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("index/", Sub.as_view()),  # 수정
+    path("index/", Index.as_view()),  # 수정
 ]

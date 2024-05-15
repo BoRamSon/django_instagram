@@ -25,6 +25,7 @@
         <!-- Jquery -->
         <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 
+
         <!-- Style -->
         <style>
             .box {
@@ -42,6 +43,32 @@
                 margin: 20px 0;
                 border: solid 1px gray;
                 background-color: white;
+            }
+            .modal_overlay {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(1.5px);
+                -webkit-backdrop-filter: blur(1.5px);
+            }
+
+            .modal_window {
+                background: white;
+                backdrop-filter: blur(13.5px);
+                -webkit-backdrop-filter: blur(13.5px);
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                width: 800px;
+                height: 600px;
+                position: relative;
+                padding: 10px;
             }
         </style>
     </head>
@@ -76,6 +103,8 @@
                     <span class="material-symbols-outlined"> explore </span>
                     <span class="material-symbols-outlined"> sms </span>
                     <span class="material-symbols-outlined"> favorite </span>
+                    <!-- add_box 에 id 값 추가 -->
+                    <span id="nav_bar_add_box" class="material-symbols-outlined"> add_box </span>
                 </div>
             </div>
         </nav>
@@ -93,23 +122,17 @@
         >
             <!-- 왼쪽 피드 섹션 : 더미 콘텐츠를 포함 -->
             <div style="width: 500px; min-width: 500px; margin-right: 300px">
-                <!-- Dumi 1 -->
+                {% for feed in feeds %}
                 <div class="feed_box">
                     <div style="display: flex; flex-direction: row; align-items: center; margin: 20px">
                         <div class="box" style="width: 35px; height: 35px">
-                            <img
-                                class="profile"
-                                src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png"
-                            />
+                            <img class="profile" src="{{ feed.profile_image }}" />
                         </div>
-                        <div>아기 근육 다람쥐</div>
+                        <div>{{ feed.user_id }}</div>
                     </div>
 
-                    <img
-                        style="width: 100%"
-                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png"
-                    />
-                    <div style="margin: 0 20px; display: flex; flex-direction: row; justify-content: space-between">
+                    <img style="width: 100%" src="{{ feed.image }}" />
+                    <div style="margin: 5px 20px; display: flex; flex-direction: row; justify-content: space-between">
                         <div>
                             <span class="material-symbols-outlined"> favorite </span>
                             <span class="material-symbols-outlined"> chat </span>
@@ -120,102 +143,22 @@
                         </div>
                     </div>
                     <!-- 좋아요 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 16px">
-                        아기 근육 다람쥐 <b>외 20명</b>이 좋아합니다.
+                    <div style="margin: 0 20px; text-align: left; font-size: 14px">
+                        <b>좋아요 {{ feed.like_count }}개</b>
                     </div>
                     <!-- 본문 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 18px">
-                        <b>아기 근육 다람쥐</b> 침대랑 한 몸이 되고 싶다~
+                    <div style="margin: 0 20px; text-align: left; font-size: 14px">
+                        <b>{{ feed.user_id }}</b> {{ feed.content }}
                     </div>
                     <!-- 댓글 리스트 -->
                     <div style="margin: 0 20px; text-align: left; font-size: 14px; color: gray">
-                        댓글 20개 모두 보기
+                        <span><b>짱구</b> 댓글은 아직 모델을 안만들어서</span>
+                        <br />
+                        <span><b>아구몬</b> 항상 이 두개가 나옵니다 ㅎㅎ</span>
+                        <pre></pre>
                     </div>
-                    <!-- 댓글 달기 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 14px; color: gray">댓글 달기</div>
                 </div>
-                <!-- Dumi 2 -->
-                <div class="feed_box">
-                    <div style="display: flex; flex-direction: row; align-items: center; margin: 20px">
-                        <div class="box" style="width: 35px; height: 35px">
-                            <img
-                                class="profile"
-                                src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png"
-                            />
-                        </div>
-                        <div>아기 근육 다람쥐</div>
-                    </div>
-
-                    <img
-                        style="width: 100%"
-                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png"
-                    />
-                    <div style="margin: 0 20px; display: flex; flex-direction: row; justify-content: space-between">
-                        <div>
-                            <span class="material-symbols-outlined"> favorite </span>
-                            <span class="material-symbols-outlined"> chat </span>
-                            <span class="material-symbols-outlined"> send </span>
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined" style="cursor: pointer">bookmark</span>
-                        </div>
-                    </div>
-                    <!-- 좋아요 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 16px">
-                        아기 근육 다람쥐 <b>외 20명</b>이 좋아합니다.
-                    </div>
-                    <!-- 본문 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 18px">
-                        <b>아기 근육 다람쥐</b> 침대랑 한 몸이 되고 싶다~
-                    </div>
-                    <!-- 댓글 리스트 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 14px; color: gray">
-                        댓글 20개 모두 보기
-                    </div>
-                    <!-- 댓글 달기 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 14px; color: gray">댓글 달기</div>
-                </div>
-                <!-- Dumi 3 -->
-                <div class="feed_box">
-                    <div style="display: flex; flex-direction: row; align-items: center; margin: 20px">
-                        <div class="box" style="width: 35px; height: 35px">
-                            <img
-                                class="profile"
-                                src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png"
-                            />
-                        </div>
-                        <div>아기 근육 다람쥐</div>
-                    </div>
-
-                    <img
-                        style="width: 100%"
-                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png"
-                    />
-                    <div style="margin: 0 20px; display: flex; flex-direction: row; justify-content: space-between">
-                        <div>
-                            <span class="material-symbols-outlined"> favorite </span>
-                            <span class="material-symbols-outlined"> chat </span>
-                            <span class="material-symbols-outlined"> send </span>
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined" style="cursor: pointer">bookmark</span>
-                        </div>
-                    </div>
-                    <!-- 좋아요 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 16px">
-                        아기 근육 다람쥐 <b>외 20명</b>이 좋아합니다.
-                    </div>
-                    <!-- 본문 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 18px">
-                        <b>아기 근육 다람쥐</b> 침대랑 한 몸이 되고 싶다~
-                    </div>
-                    <!-- 댓글 리스트 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 14px; color: gray">
-                        댓글 20개 모두 보기
-                    </div>
-                    <!-- 댓글 달기 -->
-                    <div style="margin: 0 20px; text-align: left; font-size: 14px; color: gray">댓글 달기</div>
-                </div>
+                {% endfor %}
             </div>
 
             <!-- 오른쪽 섹션 : 더미 콘텐츠를 포함 -->
@@ -339,6 +282,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- 모달 창 -->
+        <div class="modal_overlay">
+            <div class="modal_window"></div>
+        </div>
+
+        <!-- When add_box clicked -->
+
+        <script>
+            $('#nav_bar_add_box').click(function () {
+                $('.modal_overlay').css({
+                    display: 'flex',
+                });
+            });
+        </script>
 
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
