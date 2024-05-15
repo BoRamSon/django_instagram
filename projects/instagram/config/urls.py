@@ -1,5 +1,7 @@
+# config/urls.py
+
 """
-URL configuration for config project.
+URL configuration for insta project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -16,16 +18,16 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
-from content.views import Index, UploadFeed
-from django.conf import settings  # 추가
-from django.conf.urls.static import static  # 추가
+from django.urls import path, include
+from content.views import Index
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("index/", Index.as_view()),
-    path("content/upload", UploadFeed.as_view()),
+    path("content/", include("content.urls")),
+    path("user/", include("user.urls")),
 ]
 
-# 추가
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
